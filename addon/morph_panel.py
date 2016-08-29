@@ -4,6 +4,7 @@ import importlib
 import glob
 import sys
 import time
+import numpy as np
 
 import utils
 importlib.reload(utils)
@@ -44,15 +45,18 @@ def plot_neuron(all_points, radius, names):
     layers_morph = [ind == NEURON_MORPH_LAYER for ind in range(len(bpy.context.scene.layers))]
     now = time.time()
     N = len(names)
-    con_color = [0.5, 0.5, 0.5, 0]
+    con_color = np.random.uniform(0.2, 0.2, [N, 3])
     for ind, (points, rad, name) in enumerate(zip(all_points[:N], radius[:N], names[:N])):
+        curr_con_color = np.hstack((con_color[ind, :], [0.]))
         utils.time_to_go(now, ind, N, 100)
         # track = [points[:3], points[3:]]
         utils.create_cylinder(points[:3], points[3:], rad, layers_morph)
-        utils.create_material('{}_mat'.format(name), con_color, 1)
+        utils.create_material('{}_mat'.format(name), curr_con_color, 1)
         cur_obj = bpy.context.active_object
         cur_obj.name = name
         cur_obj.parent = parent_obj
+    for name in names:
+        bpy.data.objects[name].data.use_auto_smooth = True
 
 
 def morph_draw(self, context):
