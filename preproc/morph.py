@@ -3,8 +3,8 @@ import os.path as op
 
 HOC_DIR = '/home/noam/hoc/'
 
-def parse_hoc_file(model, file_name):
-    hoc_fname = op.join(HOC_DIR, model, file_name)
+
+def parse_hoc_file(hoc_fname):
     all_points, comp_names, rad = [], [], []
     with open(hoc_fname, 'r') as f:
         for line in f:
@@ -15,14 +15,13 @@ def parse_hoc_file(model, file_name):
                 points2 = list(map(float, points[1].split(',')[:3]))
                 rad.append(np.mean([float(points[k].split(',')[-1].split(')')[0].strip()) for k in range(2)]))
                 all_points.append(points1 + points2)
-    all_points = np.array(all_points)
-    rad = np.array(rad)
-    np.savez(op.join(HOC_DIR, model, 'morph'), point=all_points, names=comp_names, radiu=rad)
-    return comp_names, all_points, rad
+    return comp_names, np.array(all_points), np.array(rad)
 
 
 if __name__ == '__main__':
     model = 'KV1'
     file_name = 'DCN_morph.hoc'
-    comp_names, all_points, rad = parse_hoc_file(model, file_name)
+    hoc_fname = op.join(HOC_DIR, model, file_name)
+    comp_names, all_points, rad = parse_hoc_file(hoc_fname)
+    np.savez(op.join(HOC_DIR, model, 'morph'), point=all_points, names=comp_names, radiu=rad)
     print('finish!')
