@@ -1,7 +1,10 @@
 import numpy as np
 import os.path as op
 
-HOC_DIR = '/home/noam/hoc/'
+from preproc import utils
+
+LINKS_DIR = utils.get_links_dir()
+NEURO_SURF_DIR = utils.get_link_dir(LINKS_DIR, 'NeuroSurf')
 
 
 def parse_hoc_file(hoc_fname):
@@ -19,9 +22,9 @@ def parse_hoc_file(hoc_fname):
 
 
 if __name__ == '__main__':
-    model = 'KV1'
+    model = 'DCN'
     file_name = 'DCN_morph.hoc'
-    hoc_fname = op.join(HOC_DIR, model, file_name)
+    hoc_fname = op.join(NEURO_SURF_DIR, model, file_name)
     comp_names, all_points, rad = parse_hoc_file(hoc_fname)
-    np.savez(op.join(HOC_DIR, model, 'morph'), point=all_points, names=comp_names, radiu=rad)
+    np.savez(op.join(NEURO_SURF_DIR, model, 'morph'), point=all_points, names=comp_names, radiu=rad)
     print('finish!')

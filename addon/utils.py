@@ -1,4 +1,7 @@
-import bpy
+try:
+    import bpy
+except:
+    pass
 import os.path as op
 import time
 import math

@@ -49,12 +49,14 @@ def plot_neuron(all_points, radius, names):
     for ind, (points, rad, name) in enumerate(zip(all_points[:N], radius[:N], names[:N])):
         curr_con_color = np.hstack((con_color[ind, :], [0.]))
         utils.time_to_go(now, ind, N, 100)
-        # track = [points[:3], points[3:]]
         utils.create_cylinder(points[:3], points[3:], rad, layers_morph)
-        utils.create_material('{}_mat'.format(name), curr_con_color, 1)
+        # cur_obj = utils.create_spline([points[:3], points[3:]], layers_morph, bevel_depth=rad)
         cur_obj = bpy.context.active_object
         cur_obj.name = name
         cur_obj.parent = parent_obj
+        utils.create_material('{}_mat'.format(name), curr_con_color, 1)
+
+    print('{} compartments were created!'.format(N))
     for name in names:
         bpy.data.objects[name].data.use_auto_smooth = True
 
