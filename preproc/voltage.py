@@ -9,8 +9,8 @@ NEURO_SURF_DIR = utils.get_link_dir(LINKS_DIR, 'NeuroSurf')
 
 def load_voltage_file(model, voltage_fname, comp_name):
     voltage = np.genfromtxt(voltage_fname, delimiter='\t')[:, 0]
-    voltage = voltage.reshape((len(voltage), 1))
-    np.savez(op.join(NEURO_SURF_DIR, model, '{}_voltage'.format(comp_name)), voltage=voltage, names=[comp_name])
+    voltage = voltage.reshape((1, len(voltage)))
+    np.savez(op.join(NEURO_SURF_DIR, model, 'voltage'), voltage=voltage, names=[comp_name])
 
 if __name__ == '__main__':
     model = 'DCN'

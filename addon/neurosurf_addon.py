@@ -6,6 +6,8 @@ import glob
 
 import morph_panel
 importlib.reload(morph_panel)
+import data_panel
+importlib.reload(data_panel)
 
 
 def main(addon_prefs=None):
@@ -14,6 +16,7 @@ def main(addon_prefs=None):
         print('loading panels')
         current_module = sys.modules[__name__]
         morph_panel.init(current_module)
+        data_panel.init(current_module)
     except:
         print('The classes are already registered!')
         print(traceback.format_exc())

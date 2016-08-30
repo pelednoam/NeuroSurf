@@ -1,10 +1,13 @@
 import numpy as np
 import os.path as op
 
-from preproc import utils
+try:
+    from preproc import utils
 
-LINKS_DIR = utils.get_links_dir()
-NEURO_SURF_DIR = utils.get_link_dir(LINKS_DIR, 'NeuroSurf')
+    LINKS_DIR = utils.get_links_dir()
+    NEURO_SURF_DIR = utils.get_link_dir(LINKS_DIR, 'NeuroSurf')
+except:
+    pass
 
 
 def parse_hoc_file(hoc_fname):

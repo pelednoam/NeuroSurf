@@ -7,6 +7,20 @@ import time
 import math
 
 
+def get_user_fol():
+    root_fol = bpy.path.abspath('//')
+    neuron_name = get_neuron_name()
+    return op.join(root_fol, neuron_name)
+
+
+def get_neuron_name():
+    return namebase(bpy.data.filepath).split('_')[0]
+
+
+def namebase(file_name):
+    return op.splitext(op.basename(file_name))[0]
+
+
 def create_empty_if_doesnt_exists(name, brain_layer, layers_array, parent_obj_name='Neuron'):
     if bpy.data.objects.get(name) is None:
         layers_array[brain_layer] = True
@@ -94,3 +108,27 @@ def create_material(name, diffuseColors, transparency, copy_material=True):
     curMat.node_tree.nodes['MyColor1'].inputs[0].default_value = diffuseColors
     curMat.node_tree.nodes['MyTransparency'].inputs['Fac'].default_value = transparency
     bpy.context.active_object.active_material.diffuse_color = diffuseColors[:3]
+
+
+def insert_keyframe_to_custom_prop(obj, prop_name, value, keyframe):
+    bpy.context.scene.objects.active = obj
+    obj.select = True
+    obj[prop_name] = value
+    obj.keyframe_insert(data_path='[' + '"' + prop_name + '"' + ']', frame=keyframe)
+
+
+def view_all_in_graph_editor(context=None):
+    try:
+        if context is None:
+            context = bpy.context
+        graph_area = [context.screen.areas[k] for k in range(len(context.screen.areas)) if
+                      context.screen.areas[k].type == 'GRAPH_EDITOR'][0]
+        graph_window_region = [graph_area.regions[k] for k in range(len(graph_area.regions)) if
+                               graph_area.regions[k].type == 'WINDOW'][0]
+
+        c = context.copy()  # copy the context
+        c['area'] = graph_area
+        c['region'] = graph_window_region
+        bpy.ops.graph.view_all(c)
+    except:
+        pass
