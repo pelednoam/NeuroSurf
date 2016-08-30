@@ -8,7 +8,7 @@ import utils
 def import_voltage():
     d = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
     for data, obj_name in zip(d['voltage'], d['names']):
-        # data = data[:100]
+        data = data[:15000]
         print(obj_name)
         cur_obj = bpy.data.objects[obj_name]
         utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, 1)
@@ -23,7 +23,7 @@ def import_voltage():
 
         # remove the orange keyframe sign in the fcurves window
         fcurves = bpy.data.objects[obj_name].animation_data.action.fcurves[0]
-        mod = fcurves.modifiers.new(type='LIMITS')
+        # mod = fcurves.modifiers.new(type='LIMITS')
 
     utils.view_all_in_graph_editor()
     for obj in bpy.data.objects:

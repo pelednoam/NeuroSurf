@@ -5,7 +5,7 @@ except:
 import os.path as op
 import time
 import math
-
+import numpy as np
 
 def get_user_fol():
     root_fol = bpy.path.abspath('//')
@@ -132,3 +132,32 @@ def view_all_in_graph_editor(context=None):
         bpy.ops.graph.view_all(c)
     except:
         pass
+
+
+def can_color_obj(obj):
+    cur_mat = obj.active_material
+    return 'RGB' in cur_mat.node_tree.nodes
+
+
+def object_coloring(obj, rgb):
+    if not obj:
+        print('object_coloring: obj is None!')
+        return False
+    bpy.context.scene.objects.active = obj
+    # todo: do we need to select the object here? In diff mode it's a problem
+    # obj.select = True
+    cur_mat = obj.active_material
+    new_color = (rgb[0], rgb[1], rgb[2], 1)
+    diffuse_colors = np.hstack((rgb, [0.]))
+    cur_mat.node_tree.nodes['MyColor'].inputs[0].default_value = diffuse_colors
+    cur_mat.node_tree.nodes['MyColor1'].inputs[0].default_value = diffuse_colors
+
+    # if can_color_obj(obj):
+    #     cur_mat.node_tree.nodes["RGB"].outputs[0].default_value = new_color
+        # new_color = get_obj_color(obj)
+        # print('{} new color: {}'.format(obj.name, new_color))
+    # else:
+    #     print("Can't color {}".format(obj.name))
+    #     return False
+    return True
+
