@@ -4,6 +4,9 @@ from preproc import  windows_utils as wu
 from addon import  utils as au
 
 get_parent_fol = au.get_parent_fol
+namebase = au.namebase
+time_to_go = au.time_to_go
+make_dir = au.make_dir
 
 
 def get_links_dir(links_fol_name='links'):

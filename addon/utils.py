@@ -7,6 +7,13 @@ import time
 import math
 import numpy as np
 import pickle
+import os
+
+
+def make_dir(fol):
+    if not os.path.isdir(fol):
+        os.makedirs(fol)
+    return fol
 
 
 def save(obj, fname):
@@ -162,7 +169,6 @@ def object_coloring(obj, rgb):
     # todo: do we need to select the object here? In diff mode it's a problem
     # obj.select = True
     cur_mat = obj.active_material
-    new_color = (rgb[0], rgb[1], rgb[2], 1)
     diffuse_colors = np.hstack((rgb, [0.]))
     cur_mat.node_tree.nodes['MyColor'].inputs[0].default_value = diffuse_colors
     cur_mat.node_tree.nodes['MyColor1'].inputs[0].default_value = diffuse_colors
@@ -175,4 +181,3 @@ def object_coloring(obj, rgb):
     #     print("Can't color {}".format(obj.name))
     #     return False
     return True
-

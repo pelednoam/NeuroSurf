@@ -37,7 +37,7 @@ class ModalTimerOperator(bpy.types.Operator):
             return {'PASS_THROUGH'}
 
         if event.type in {'RIGHTMOUSE', 'ESC'} or self.limits > bpy.context.scene.play_to:
-            plot_something(self, context, bpy.context.scene.play_to)
+            plot_something(context, bpy.context.scene.play_to)
             self.limits = bpy.context.scene.play_from
             PlayPanel.is_playing = False
             bpy.context.scene.update()
@@ -50,7 +50,7 @@ class ModalTimerOperator(bpy.types.Operator):
                 print(self.limits, time.time() - self._time)
                 self._time = time.time()
                 try:
-                    plot_something(self, context, self.limits)
+                    plot_something(context, self.limits)
                 except:
                     print(traceback.format_exc())
                     print('Error in plotting at {}!'.format(self.limits))
@@ -83,13 +83,13 @@ def render_movie(play_type, play_from, play_to, play_dt=1):
         print('limits: {}'.format(limits))
         bpy.context.scene.frame_current = limits
         try:
-            plot_something(None, bpy.context, limits)
+            plot_something(bpy.context, limits)
         except:
             print(traceback.format_exc())
             print('Error in plotting at {}!'.format(limits))
 
 
-def plot_something(self, context, cur_frame):
+def plot_something(context, cur_frame):
     if bpy.context.scene.frame_current > bpy.context.scene.play_to:
         return
 
@@ -247,7 +247,7 @@ class Pause(bpy.types.Operator):
 
     def invoke(self, context, event=None):
         PlayPanel.is_playing = False
-        plot_something(self, context, bpy.context.scene.frame_current)
+        plot_something(context, bpy.context.scene.frame_current)
         return {"FINISHED"}
 
 
@@ -259,7 +259,7 @@ class PrevKeyFrame(bpy.types.Operator):
     def invoke(self, context, event=None):
         PlayPanel.is_playing = False
         bpy.context.scene.frame_current -= bpy.context.scene.play_from
-        plot_something(self, context, bpy.context.scene.frame_current)
+        plot_something(context, bpy.context.scene.frame_current)
         return {'FINISHED'}
 
 
@@ -271,7 +271,7 @@ class NextKeyFrame(bpy.types.Operator):
     def invoke(self, context, event=None):
         PlayPanel.is_playing = False
         bpy.context.scene.frame_current += bpy.context.scene.play_dt
-        plot_something(self, context, bpy.context.scene.frame_current)
+        plot_something(context, bpy.context.scene.frame_current)
         return {"FINISHED"}
 
 

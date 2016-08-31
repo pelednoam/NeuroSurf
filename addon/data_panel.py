@@ -5,24 +5,26 @@ import time
 import utils
 
 
-def import_voltage():
+def import_voltage(t_start=0, t_end=-1):
     d = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
     for data, obj_name in zip(d['voltage'], d['names']):
-        data = data[:15000]
-        print(obj_name)
+        if obj_name != 'soma':
+            continue
+        data = data[t_start:t_end]
+        print(obj_name, data.shape)
         cur_obj = bpy.data.objects[obj_name]
-        utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, 1)
-        utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, len(data) + 2)
+        # utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, 1)
+        # utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, len(data) + 2)
         print('keyframing ' + obj_name + ' object')
         now = time.time()
         N = len(data)
         for ind, timepoint in enumerate(data):
             utils.time_to_go(now, ind, N, 1000)
             # print('keyframing '+obj_name+' object')
-            utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, timepoint, ind + 2)
+            utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, timepoint, ind)
 
         # remove the orange keyframe sign in the fcurves window
-        fcurves = bpy.data.objects[obj_name].animation_data.action.fcurves[0]
+        # fcurves = bpy.data.objects[obj_name].animation_data.action.fcurves[0]
         # mod = fcurves.modifiers.new(type='LIMITS')
 
     utils.view_all_in_graph_editor()
@@ -45,7 +47,7 @@ class ImportVoltage(bpy.types.Operator):
     bl_options = {"UNDO"}
 
     def invoke(self, context, event=None):
-        import_voltage()
+        import_voltage(40000, 80000)
         return {'PASS_THROUGH'}
 
 
