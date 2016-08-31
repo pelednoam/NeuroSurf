@@ -1,5 +1,6 @@
 import os.path as op
 import numpy as np
+import glob
 
 from preproc import utils
 from preproc import colormaps_utils as cu
@@ -16,8 +17,17 @@ def load_voltage_file(model, voltage_fname, comp_name):
     np.savez(op.join(NEURO_SURF_DIR, model, 'voltage'), voltage=voltage, names=[comp_name], colors=colors)
 
 
-def load_voltage_fol():
-    pass
+def load_voltage_fol(fol):
+    voltage_files = glob.glob(op.join(fol, '*.npy'))
+    voltage = np.load(voltage_files)
+    voltages = np.zeros((len(voltage_files), voltage.shape[0], 4))
+    for ind, voltage_fname in enumerate(voltage_files):
+        print('Loading {}'.format())
+        voltage = np.load(voltage_files)
+        voltages[ind, :, 0] = voltage
+        voltages[ind, :, 1:] = cu.mat_to_colors_two_colors_maps()
+        pass
+
 
 if __name__ == '__main__':
     model = 'DCN'
