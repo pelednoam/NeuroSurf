@@ -10,7 +10,11 @@ import data_panel
 importlib.reload(data_panel)
 import coloring_panel
 importlib.reload(coloring_panel)
+import play_panel
+importlib.reload(play_panel)
 
+
+color_compartments = coloring_panel.color_compartments
 
 def main(addon_prefs=None):
     # Some initialization stuff
@@ -20,6 +24,7 @@ def main(addon_prefs=None):
         morph_panel.init(current_module)
         data_panel.init(current_module)
         coloring_panel.init(current_module)
+        play_panel.init(current_module)
     except:
         print('The classes are already registered!')
         print(traceback.format_exc())

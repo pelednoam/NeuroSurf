@@ -6,6 +6,21 @@ import os.path as op
 import time
 import math
 import numpy as np
+import pickle
+
+
+def save(obj, fname):
+    with open(fname, 'wb') as fp:
+        pickle.dump(obj, fp, protocol=4)
+
+
+def load(fname):
+    with open(fname, 'rb') as fp:
+        obj = pickle.load(fp)
+    if obj is None:
+        print('the data in {} is None!'.format(fname))
+    return obj
+
 
 def get_user_fol():
     root_fol = bpy.path.abspath('//')

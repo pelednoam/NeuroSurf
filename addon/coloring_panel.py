@@ -1,13 +1,14 @@
 import bpy
 import os.path as op
 import numpy as np
-
+import glob
 import utils
 
 
 def color_compartments():
-    d = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
-    for name, color in zip(d['names'], d['colors']):
+    d = ColoringPanel.data
+    # for name, color in zip(d['names'], d['colors']):
+    for name,
         rgb = color[bpy.context.scene.frame_current, :]
         obj = bpy.data.objects[name]
         utils.object_coloring(obj, rgb)
@@ -36,6 +37,7 @@ class ColoringPanel(bpy.types.Panel):
     bl_label = "Coloring"
     addon = None
     init = False
+    data = None
 
     def draw(self, context):
         if ColoringPanel.init:
@@ -45,6 +47,12 @@ class ColoringPanel(bpy.types.Panel):
 def init(addon):
     print('Loading coloring panel')
     ColoringPanel.addon = addon
+    # ColoringPanel.data = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
+    ColoringPanel.data = {}
+    data_fol = op.join(utils.get_user_fol(), 'voltage')
+    for voltage_fname in glob.glob(op.join(data_fol, '*.npy')):
+        comp_name = utils.namebase(voltage_fname)
+        ColoringPanel.data[comp_name] = np.load(voltage_fname)
     register()
     ColoringPanel.init = True
 
