@@ -4,7 +4,7 @@ import os.path as op
 import sys
 
 try:
-    from utils import utils
+    from utils import utils, windows_utils
 except:
     pass
 

@@ -1,9 +1,11 @@
 import os
 import os.path as op
+import subprocess
 import traceback
+from sys import platform as _platform
 
-from preproc import  windows_utils as wu
 from addon import  utils as au
+from utils import windows_utils as wu
 
 get_parent_fol = au.get_parent_fol
 namebase = au.namebase
@@ -11,6 +13,22 @@ time_to_go = au.time_to_go
 make_dir = au.make_dir
 load = au.load
 save = au.save
+
+IS_LINUX = _platform == "linux" or _platform == "linux2"
+IS_MAC = _platform == "darwin"
+IS_WINDOWS = _platform == "win32"
+print('platform: {}'.format(_platform))
+
+def is_mac():
+    return IS_MAC
+
+
+def is_windows():
+    return IS_WINDOWS
+
+
+def is_linux():
+    return IS_LINUX
 
 
 def get_links_dir(links_fol_name='links'):
@@ -68,3 +86,15 @@ def remove_file(fname, raise_error_if_does_not_exist=False):
             raise Exception(traceback.format_exc())
         else:
             print(traceback.format_exc())
+
+
+def run_script(cmd, verbose=False):
+    if verbose:
+        print('running: {}'.format(cmd))
+    if is_windows():
+        output = subprocess.call(cmd)
+    else:
+        output = subprocess.check_output('{} | tee /dev/stderr'.format(cmd), shell=True)
+
+    print(output)
+    return output

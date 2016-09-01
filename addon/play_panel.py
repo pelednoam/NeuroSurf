@@ -119,12 +119,12 @@ def capture_graph(play_type=None, output_path=None, selection_type=None):
     graph_data, graph_colors = {}, {}
 
     if play_type in ['voltage']:
-        graph_data['voltage'], graph_colors['voltage`'] = capture_graph_data()
+        graph_data['voltage'], graph_colors['voltage'] = capture_graph_data()
     save_graph_data(graph_data, graph_colors, image_fol)
 
 
 def capture_graph_data():
-    time_range = range(8163,8242)
+    time_range = range(8091,8242)
     soma_obj = bpy.data.objects['soma']
     soma_data, soma_colors = utils.evaluate_fcurves(soma_obj, time_range)
     return soma_data, soma_colors

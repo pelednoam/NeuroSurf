@@ -329,8 +329,8 @@ def save_soma():
     data_to_show_in_graph = ('voltage')
     video_fname = 'voltage.mp4'
     cb_title = 'voltage'
-    time_range = range(8163,8242)
-    xticks = [] #time_range
+    time_range = range(8091,8242)
+    xticks = []
     ylim = ()
     ylabels = ["soma's voltage"]
     xticklabels = []
