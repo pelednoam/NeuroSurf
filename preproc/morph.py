@@ -1,8 +1,9 @@
-import numpy as np
 import os.path as op
 
+import numpy as np
+
 try:
-    from preproc import utils
+    from utils import utils
 
     LINKS_DIR = utils.get_links_dir()
     NEURO_SURF_DIR = utils.get_link_dir(LINKS_DIR, 'NeuroSurf')

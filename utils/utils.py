@@ -1,5 +1,7 @@
 import os
 import os.path as op
+import traceback
+
 from preproc import  windows_utils as wu
 from addon import  utils as au
 
@@ -7,6 +9,8 @@ get_parent_fol = au.get_parent_fol
 namebase = au.namebase
 time_to_go = au.time_to_go
 make_dir = au.make_dir
+load = au.load
+save = au.save
 
 
 def get_links_dir(links_fol_name='links'):
@@ -32,3 +36,35 @@ def get_link_dir(links_dir, link_name, var_name='', default_val='', throw_except
         else:
             print('No {} dir!'.format(link_name))
     return val
+
+
+def chunks(l, n):
+    # todo: change the code to use np.array_split
+    n = max(1, int(n))
+    return [l[i:i + n] for i in range(0, len(l), n)]
+
+
+def run_parallel(func, params, njobs=1):
+    import multiprocessing
+    if njobs == 1:
+        results = [func(p) for p in params]
+    else:
+        pool = multiprocessing.Pool(processes=njobs)
+        results = pool.map(func, params)
+        pool.close()
+    return results
+
+
+def get_max_abs(data_max, data_min):
+    return max(map(abs, [data_max, data_min]))
+
+
+def remove_file(fname, raise_error_if_does_not_exist=False):
+    try:
+        if op.isfile(fname):
+            os.remove(fname)
+    except:
+        if raise_error_if_does_not_exist:
+            raise Exception(traceback.format_exc())
+        else:
+            print(traceback.format_exc())

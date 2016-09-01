@@ -27,7 +27,7 @@ def load_hoc_file():
     hoc_fname = bpy.path.abspath(bpy.context.scene.hoc_file)
     print('Loading hoc file {}'.format(hoc_fname))
     comp_names, points, rad = preproc.parse_hoc_file(hoc_fname)
-    return comp_names, points, rad
+    return comp_names, points/10.0, rad/10.0
 
 
 def initialize_neuron():

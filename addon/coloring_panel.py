@@ -5,13 +5,17 @@ import glob
 import utils
 
 
-def color_compartments(t_start=0):
+def color_compartments():
+    if bpy.data.objects.get('Morph', None) is None:
+        return
     d = ColoringPanel.data
     print('Start coloring the comps')
-    t = bpy.context.scene.frame_current + t_start
+    t = bpy.context.scene.frame_current + ColoringPanel.t_start
     for name, color, val in zip(d['names'], d['colors'], d['voltage']):
         rgb = color[t, :]
-        obj = bpy.data.objects[name]
+        obj = bpy.data.objects.get(name, None)
+        if obj is None:
+            continue
         if name == 'soma':
             print(name, rgb, t, val[t])
         utils.object_coloring(obj, rgb)
@@ -20,18 +24,19 @@ def color_compartments(t_start=0):
 
 def coloring_draw(self, context):
     layout = self.layout
-    soma_voltage = ColoringPanel.data['voltage'][ColoringPanel.soma_index, bpy.context.scene.frame_current + 40000]
+    soma_voltage = ColoringPanel.data['voltage'][ColoringPanel.soma_index,
+                                                 bpy.context.scene.frame_current + ColoringPanel.t_start]
     layout.label(text='{}'.format(soma_voltage))
     layout.operator(ColorCompartment.bl_idname, text="Color", icon='EYEDROPPER')
 
 
 class ColorCompartment(bpy.types.Operator):
-    bl_idname = "ns.load_morph"
+    bl_idname = "ns.color_compartments"
     bl_label = "Load Morph"
     bl_options = {"UNDO"}
 
     def invoke(self, context, event=None):
-        color_compartments(40000)
+        color_compartments()
         return {'PASS_THROUGH'}
 
 
@@ -55,6 +60,7 @@ def init(addon):
     ColoringPanel.addon = addon
     ColoringPanel.data = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
     ColoringPanel.soma_index = np.where(ColoringPanel.data['names'] == 'soma')[0]
+    ColoringPanel.t_start = 40000
     # ColoringPanel.data = {}
     # data_fol = op.join(utils.get_user_fol(), 'voltage')
     # for voltage_fname in glob.glob(op.join(data_fol, '*.npy')):

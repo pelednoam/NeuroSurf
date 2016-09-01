@@ -1,11 +1,12 @@
-import os.path as op
-import numpy as np
 import glob
+import os.path as op
 import time
-import matplotlib.pyplot as plt
 
-from preproc import utils
+import matplotlib.pyplot as plt
+import numpy as np
+
 from preproc import colormaps_utils as cu
+from utils import utils
 
 LINKS_DIR = utils.get_links_dir()
 NEURO_SURF_DIR = utils.get_link_dir(LINKS_DIR, 'NeuroSurf')
@@ -30,7 +31,7 @@ def load_voltage_fol(neuron_name, fol, color_map='jet', do_plot=False):
     now = time.time()
     N = len(voltage_files)
     for ind, voltage_fname in enumerate(voltage_files):
-        utils.time_to_go(now, ind, N, int(N/10))
+        utils.time_to_go(now, ind, N, int(N / 10))
         comp_name = utils.namebase(voltage_fname)
         if comp_name == 'time':
             continue
@@ -42,9 +43,9 @@ def load_voltage_fol(neuron_name, fol, color_map='jet', do_plot=False):
             plt.plot(voltage)
             plt.savefig(op.join(figure_fol, '{}.jpg'.format(comp_name)))
             plt.close()
-    data_max, data_min = np.max(voltages[:, :]), np.min(voltages[:, :])
-    colors = cu.mat_to_colors(voltages[:, :], data_min, data_max, color_map)
-    np.savez(op.join(NEURO_SURF_DIR, neuron_name, 'voltage'), voltage=voltages, names=names, colors=colors)
+    data_max, data_min = np.max(voltages), np.min(voltages[:, :])
+    colors = cu.mat_to_colors(voltages, data_min, data_max, color_map)
+    np.savez(op.join(NEURO_SURF_DIR, neuron_name, 'voltages'), voltage=voltages, names=names, colors=colors)
 
 
 if __name__ == '__main__':

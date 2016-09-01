@@ -1,10 +1,10 @@
-import sys
+import argparse
 import os
 import os.path as op
-import argparse
+import sys
 
 try:
-    from preproc import utils
+    from utils import utils
 except:
     pass
 
@@ -27,45 +27,34 @@ def get_parent_fol(curr_dir='', levels=1):
         parent_fol = get_parent_fol(parent_fol)
     return parent_fol
 
-
-def chdir_to_mmvt_addon():
-    current_dir = os.path.split(get_current_dir())[1]
-    if current_dir == 'scripts':
-        code_root_dir = get_mmvt_addon_dir()
-        os.chdir(code_root_dir)
-    else:
-        print("Not in scripts dir! Can't change the current dir to mmvt addon")
-
-
 try:
     from addon import utils
 except:
-    addon_fol = op.join(get_parent_fol(), 'addon')
-    sys.path.append(addon_fol)
+    sys.path.append(get_addon_dir())
     import utils
 
 
-def get_code_root_dir():
-    return get_parent_fol(levels=3)
+# def get_code_root_dir():
+#     return get_parent_fol(levels=3)
 
 
-def get_mmvt_addon_dir():
-    return get_parent_fol(levels=1)
+def get_addon_dir():
+    return op.join(get_parent_fol(), 'addon')
 
 
 def get_links_dir():
-    return op.join(get_parent_fol(levels=4), 'links')
+    return op.join(get_parent_fol(levels=2), 'links')
 
 
 def get_preproc_dir():
-    preproc_dir = op.join(get_parent_fol(), 'preproc')
+    return op.join(get_parent_fol(), 'preproc')
 
 
 def get_windows_link(shortcut):
     try:
         from preproc import windows_utils as wu
     except:
-        sys.path.append()
+        sys.path.append(get_preproc_dir())
         import windows_utils as wu
     sc = wu.MSShortcut('{}.lnk'.format(shortcut))
     return op.join(sc.localBasePath, sc.commonPathSuffix)
@@ -89,9 +78,9 @@ def get_link_dir(links_dir, link_name, var_name='', default_val='', throw_except
     return val
 
 
-def get_mmvt_dir():
-    return get_link_dir(get_links_dir(), 'mmvt')
-    # return op.join(get_links_dir(), 'mmvt')
+# def get_mmvt_dir():
+#     return get_link_dir(get_links_dir(), 'mmvt')
+#     return op.join(get_links_dir(), 'mmvt')
 
 
 def get_blender_dir():
@@ -99,16 +88,16 @@ def get_blender_dir():
     # return op.join(get_links_dir(), 'blender')
 
 
-def get_utils_dir():
-    return op.join(get_parent_fol(levels=2), 'utils')
+# def get_utils_dir():
+#     return op.join(get_parent_fol(levels=2), 'utils')
 
 
-def add_utils_to_import_path():
-    sys.path.append(get_utils_dir())
+# def add_utils_to_import_path():
+#     sys.path.append(get_utils_dir())
 
 
 try:
-    from src.utils import args_utils as au
+    from preproc import args_utils as au
 except:
     add_utils_to_import_path()
     import args_utils as au

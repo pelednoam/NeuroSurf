@@ -119,8 +119,15 @@ def capture_graph(play_type=None, output_path=None, selection_type=None):
     graph_data, graph_colors = {}, {}
 
     if play_type in ['voltage']:
-        graph_data['voltage'], graph_colors['voltage'] = capture_graph_data()
+        graph_data['voltage'], graph_colors['voltage`'] = capture_graph_data()
     save_graph_data(graph_data, graph_colors, image_fol)
+
+
+def capture_graph_data():
+    time_range = range(8163,8242)
+    soma_obj = bpy.data.objects['soma']
+    soma_data, soma_colors = utils.evaluate_fcurves(soma_obj, time_range)
+    return soma_data, soma_colors
 
 
 def save_graph_data(data, graph_colors, image_fol):
@@ -130,20 +137,20 @@ def save_graph_data(data, graph_colors, image_fol):
     print('Saving data into {}'.format(op.join(image_fol, 'data.pkl')))
 
 
-def get_meg_data(per_condition=True):
+def get_soma_data(per_condition=True):
     time_range = range(PlayPanel.addon.get_max_time_steps())
     brain_obj = bpy.data.objects['Brain']
     if per_condition:
-        meg_data, meg_colors = OrderedDict(), OrderedDict()
+        soma_data, soma_colors = OrderedDict(), OrderedDict()
         rois_objs = bpy.data.objects['Cortex-lh'].children + bpy.data.objects['Cortex-rh'].children
         for roi_obj in rois_objs:
             if roi_obj.animation_data:
-                meg_data_roi, meg_colors_roi = mu.evaluate_fcurves(roi_obj, time_range)
-                meg_data.update(meg_data_roi)
-                meg_colors.update(meg_colors_roi)
+                soma_data_roi, soma_colors_roi = mu.evaluate_fcurves(roi_obj, time_range)
+                soma_data.update(soma_data_roi)
+                soma_colors.update(soma_colors_roi)
     else:
-        meg_data, meg_colors = mu.evaluate_fcurves(brain_obj, time_range)
-    return meg_data, meg_colors
+        soma_data, soma_colors = mu.evaluate_fcurves(brain_obj, time_range)
+    return soma_data, soma_colors
 
 
 def init_plotting():

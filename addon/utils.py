@@ -8,6 +8,7 @@ import math
 import numpy as np
 import pickle
 import os
+from collections import OrderedDict
 
 
 def make_dir(fol):
@@ -181,3 +182,22 @@ def object_coloring(obj, rgb):
     #     print("Can't color {}".format(obj.name))
     #     return False
     return True
+
+
+def evaluate_fcurves(parent_obj, time_range):
+    data = OrderedDict()
+    colors = OrderedDict()
+    for fcurve in parent_obj.animation_data.action.fcurves:
+        if fcurve.hide:
+            continue
+        name = fcurve.data_path.split('"')[1]
+        print('{} extrapolation'.format(name))
+        # todo: we should return the interpolation to its previous value
+        # for kf in fcurve.keyframe_points:
+        #     kf.interpolation = 'BEZIER'
+        data[name] = []
+        for t in time_range:
+            d = fcurve.evaluate(t)
+            data[name].append(d)
+        colors[name] = tuple(fcurve.color)
+    return data, colors
