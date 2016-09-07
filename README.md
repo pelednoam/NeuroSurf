@@ -3,7 +3,8 @@ Visualization tool for single neurons
 
 1. Loading a hoc file ([Ovsepian et al. 2013](https://senselab.med.yale.edu/ModelDB/ShowModel.cshtml?model=150024&file=/CNModel_May2013/DCN_morph.hoc#tabs-2) in the following example). Neurosurf automatically parses the file and creates the 3D morphology of the neuron.
 2. Importing the result of the simulation ([Neuron](http://neuron.duke.edu/)).
-3. Pick a compartment, pick a point in time, and plot the activation 
+3. Pick a compartment, pick a point in time, and plot the activation.
+
 ![example](https://cloud.githubusercontent.com/assets/1643819/18319079/4381cdbe-74f2-11e6-898c-105529301133.png)
 
 ## Videos
