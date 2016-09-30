@@ -5,11 +5,12 @@ import glob
 import sys
 import time
 import numpy as np
+import traceback
 
-import utils
-importlib.reload(utils)
+import ns_utils
+# importlib.reload(ns_utils)
 
-sys.path.append(utils.get_preproc_fol())
+sys.path.append(ns_utils.get_preproc_fol())
 import morph as preproc
 importlib.reload(preproc)
 
@@ -36,7 +37,7 @@ def initialize_neuron():
     layers_array = bpy.context.scene.layers
     emptys_names = ["Neuron", "Morph"]
     for name in emptys_names:
-        utils.create_empty_if_doesnt_exists(name, neuron_layer, layers_array)
+        ns_utils.create_empty_if_doesnt_exists(name, neuron_layer, layers_array)
     bpy.context.scene.layers = [ind == NEURON_MORPH_LAYER for ind in range(len(bpy.context.scene.layers))]
 
 
@@ -48,13 +49,13 @@ def plot_neuron(all_points, radius, names):
     con_color = np.random.uniform(0.2, 0.2, [N, 3])
     for ind, (points, rad, name) in enumerate(zip(all_points[:N], radius[:N], names[:N])):
         curr_con_color = np.hstack((con_color[ind, :], [0.]))
-        utils.time_to_go(now, ind, N, 100)
-        utils.create_cylinder(points[:3], points[3:], rad, layers_morph)
-        # cur_obj = utils.create_spline([points[:3], points[3:]], layers_morph, bevel_depth=rad)
+        ns_utils.time_to_go(now, ind, N, 100)
+        ns_utils.create_cylinder(points[:3], points[3:], rad, layers_morph)
+        # cur_obj = ns_utils.create_spline([points[:3], points[3:]], layers_morph, bevel_depth=rad)
         cur_obj = bpy.context.active_object
         cur_obj.name = name
         cur_obj.parent = parent_obj
-        utils.create_material('{}_mat'.format(name), curr_con_color, 1)
+        ns_utils.create_material('{}_mat'.format(name), curr_con_color, 1)
 
     print('{} compartments were created!'.format(N))
     for name in names:
@@ -108,6 +109,7 @@ def register():
         bpy.utils.register_class(LoadButton)
     except:
         print("Can't register Morph Panel!")
+        print(traceback.format_exc())
 
 
 def unregister():

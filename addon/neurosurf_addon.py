@@ -4,6 +4,8 @@ import sys
 import os.path as op
 import glob
 
+import ns_utils
+importlib.reload(ns_utils)
 import morph_panel
 importlib.reload(morph_panel)
 import data_panel
@@ -14,7 +16,6 @@ import play_panel
 importlib.reload(play_panel)
 import render_panel
 importlib.reload(render_panel)
-
 
 color_compartments = coloring_panel.color_compartments
 render_image = render_panel.render_image

@@ -2,7 +2,8 @@ import bpy
 import os.path as op
 import numpy as np
 import glob
-import utils
+import traceback
+import ns_utils
 
 
 def color_compartments():
@@ -18,7 +19,7 @@ def color_compartments():
             continue
         if name == 'soma':
             print(name, rgb, t, val[t])
-        utils.object_coloring(obj, rgb)
+        ns_utils .object_coloring(obj, rgb)
     print('Finish coloring the comps')
 
 
@@ -58,13 +59,13 @@ class ColoringPanel(bpy.types.Panel):
 def init(addon):
     print('Loading coloring panel')
     ColoringPanel.addon = addon
-    ColoringPanel.data = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
+    ColoringPanel.data = np.load(op.join(ns_utils .get_user_fol(), 'voltage.npz'))
     ColoringPanel.soma_index = np.where(ColoringPanel.data['names'] == 'soma')[0]
     ColoringPanel.t_start = 40000
     # ColoringPanel.data = {}
-    # data_fol = op.join(utils.get_user_fol(), 'voltage')
+    # data_fol = op.join(ns_utils .get_user_fol(), 'voltage')
     # for voltage_fname in glob.glob(op.join(data_fol, '*.npy')):
-    #     comp_name = utils.namebase(voltage_fname)
+    #     comp_name = ns_utils .namebase(voltage_fname)
     #     ColoringPanel.data[comp_name] = np.load(voltage_fname)
     register()
     ColoringPanel.init = True
@@ -74,15 +75,16 @@ def init(addon):
 def register():
     try:
         unregister()
-        bpy.utils.register_class(ColoringPanel)
-        bpy.utils.register_class(ColorCompartment)
+        bpy.utils .register_class(ColoringPanel)
+        bpy.utils .register_class(ColorCompartment)
     except:
         print("Can't register Coloring Panel!")
+        print(traceback.format_exc())
 
 
 def unregister():
     try:
-        bpy.utils.unregister_class(ColoringPanel)
-        bpy.utils.unregister_class(ColorCompartment)
+        bpy.utils .unregister_class(ColoringPanel)
+        bpy.utils .unregister_class(ColorCompartment)
     except:
         pass

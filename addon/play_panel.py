@@ -5,7 +5,9 @@ import traceback
 import time
 import os
 from collections import OrderedDict
-import utils 
+import traceback
+import ns_utils
+
 
 bpy.types.Scene.play_from = bpy.props.IntProperty(default=0, min=0, description="When to filter from")
 bpy.types.Scene.play_to = bpy.props.IntProperty(default=bpy.context.scene.frame_end, min=0,
@@ -126,14 +128,14 @@ def capture_graph(play_type=None, output_path=None, selection_type=None):
 def capture_graph_data():
     time_range = range(8091,8242)
     soma_obj = bpy.data.objects['soma']
-    soma_data, soma_colors = utils.evaluate_fcurves(soma_obj, time_range)
+    soma_data, soma_colors = ns_utils.evaluate_fcurves(soma_obj, time_range)
     return soma_data, soma_colors
 
 
 def save_graph_data(data, graph_colors, image_fol):
     if not os.path.isdir(image_fol):
         os.makedirs(image_fol)
-    utils.save((data, graph_colors), op.join(image_fol, 'data.pkl'))
+    ns_utils.save((data, graph_colors), op.join(image_fol, 'data.pkl'))
     print('Saving data into {}'.format(op.join(image_fol, 'data.pkl')))
 
 
@@ -145,11 +147,11 @@ def get_soma_data(per_condition=True):
         rois_objs = bpy.data.objects['Cortex-lh'].children + bpy.data.objects['Cortex-rh'].children
         for roi_obj in rois_objs:
             if roi_obj.animation_data:
-                soma_data_roi, soma_colors_roi = mu.evaluate_fcurves(roi_obj, time_range)
+                soma_data_roi, soma_colors_roi = ns_utils.evaluate_fcurves(roi_obj, time_range)
                 soma_data.update(soma_data_roi)
                 soma_colors.update(soma_colors_roi)
     else:
-        soma_data, soma_colors = mu.evaluate_fcurves(brain_obj, time_range)
+        soma_data, soma_colors = ns_utils.evaluate_fcurves(brain_obj, time_range)
     return soma_data, soma_colors
 
 

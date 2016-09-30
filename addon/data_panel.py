@@ -2,32 +2,33 @@ import bpy
 import os.path as op
 import numpy as np
 import time
-import utils
+import traceback
+import ns_utils
 
 
 def import_voltage(t_start=0, t_end=-1):
-    d = np.load(op.join(utils.get_user_fol(), 'voltage.npz'))
+    d = np.load(op.join(ns_utils.get_user_fol(), 'voltage.npz'))
     for data, obj_name in zip(d['voltage'], d['names']):
         if obj_name != 'soma':
             continue
         data = data[t_start:t_end]
         print(obj_name, data.shape)
         cur_obj = bpy.data.objects[obj_name]
-        # utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, 1)
-        # utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, len(data) + 2)
+        # ns_utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, 1)
+        # ns_utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, 0, len(data) + 2)
         print('keyframing ' + obj_name + ' object')
         now = time.time()
         N = len(data)
         for ind, timepoint in enumerate(data):
-            utils.time_to_go(now, ind, N, 1000)
+            ns_utils.time_to_go(now, ind, N, 1000)
             # print('keyframing '+obj_name+' object')
-            utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, timepoint, ind)
+            ns_utils.insert_keyframe_to_custom_prop(cur_obj, obj_name, timepoint, ind)
 
         # remove the orange keyframe sign in the fcurves window
         # fcurves = bpy.data.objects[obj_name].animation_data.action.fcurves[0]
         # mod = fcurves.modifiers.new(type='LIMITS')
 
-    utils.view_all_in_graph_editor()
+    ns_utils.view_all_in_graph_editor()
     for obj in bpy.data.objects:
         obj.select = False
     try:
@@ -79,6 +80,7 @@ def register():
         bpy.utils.register_class(ImportVoltage)
     except:
         print("Can't register Data Panel!")
+        print(traceback.format_exc())
 
 
 def unregister():

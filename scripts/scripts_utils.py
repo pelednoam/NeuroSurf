@@ -28,7 +28,7 @@ def get_parent_fol(curr_dir='', levels=1):
     return parent_fol
 
 try:
-    from addon import utils
+    from addon import ns_utils
 except:
     sys.path.append(get_addon_dir())
     import utils

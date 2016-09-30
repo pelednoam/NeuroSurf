@@ -2,7 +2,8 @@ import bpy
 import math
 import os.path as op
 import glob
-import utils as utils
+import traceback
+import ns_utils
 
 bpy.types.Scene.output_path = bpy.props.StringProperty(
     name="", default="", description="Define the path for the output files", subtype='DIR_PATH')
@@ -24,7 +25,7 @@ def load_camera(camera_fname=''):
     if camera_fname == '':
         camera_fname = op.join(bpy.path.abspath(bpy.context.scene.output_path), 'camera.pkl')
     if op.isfile(camera_fname):
-        X_rotation, Y_rotation, Z_rotation, X_location, Y_location, Z_location = utils.load(camera_fname)
+        X_rotation, Y_rotation, Z_rotation, X_location, Y_location, Z_location = ns_utils.load(camera_fname)
         RenderFigure.update_camera = False
         bpy.context.scene.X_rotation = X_rotation
         bpy.context.scene.Y_rotation = Y_rotation
@@ -59,10 +60,10 @@ def grab_camera(self=None, do_save=True):
     if do_save:
         if op.isdir(bpy.path.abspath(bpy.context.scene.output_path)):
             camera_fname = op.join(bpy.path.abspath(bpy.context.scene.output_path), 'camera.pkl')
-            utils.save((X_rotation, Y_rotation, Z_rotation, X_location, Y_location, Z_location), camera_fname)
+            ns_utils.save((X_rotation, Y_rotation, Z_rotation, X_location, Y_location, Z_location), camera_fname)
             print('Camera location was saved to {}'.format(camera_fname))
         else:
-            utils.message(self, "Can't find the folder {}".format(bpy.path.abspath(bpy.context.scene.output_path)))
+            ns_utils.message(self, "Can't find the folder {}".format(bpy.path.abspath(bpy.context.scene.output_path)))
     RenderFigure.update_camera = True
 
 
@@ -193,11 +194,11 @@ def render_all_images():
     camera_files = glob.glob(op.join(bpy.path.abspath(bpy.context.scene.output_path), 'camera_*.pkl'))
     for camera_file in camera_files:
         load_camera(camera_file)
-        camera_name = utils.namebase(camera_file)
-        for hemi in utils.HEMIS:
+        camera_name = ns_utils.namebase(camera_file)
+        for hemi in ns_utils.HEMIS:
             if hemi in camera_name:
                 RenderingMakerPanel.addon.show_hide_hemi(False, hemi)
-                RenderingMakerPanel.addon.show_hide_hemi(True, utils.other_hemi(hemi))
+                RenderingMakerPanel.addon.show_hide_hemi(True, ns_utils.other_hemi(hemi))
         render_image('{}_fig'.format(camera_name[len('camera') + 1:]))
 
 
@@ -226,11 +227,11 @@ def render_image(image_name='', image_fol='', quality=0, use_square_samples=None
         bpy.ops.render.render(write_still=True)
     else:
         grab_camera()
-        utils.change_fol_to_mmvt_root()
+        ns_utils.change_fol_to_mmvt_root()
         electrode_marked = RenderingMakerPanel.addon.is_current_electrode_marked()
         script = 'src.mmvt_addon.scripts.render_image'
         cmd = '{} -m {} -s {} -a {} -q {} -b {} '.format(
-            bpy.context.scene.python_cmd, script, utils.get_user(), bpy.context.scene.atlas,
+            bpy.context.scene.python_cmd, script, ns_utils.get_user(), bpy.context.scene.atlas,
             bpy.context.scene.render.resolution_percentage, bpy.context.scene.bipolar) + \
               '--hide_lh {} --hide_rh {} --hide_subs {} --show_elecs {} --curr_elec {} --show_only_lead {} '.format(
                   bpy.context.scene.objects_show_hide_lh, bpy.context.scene.objects_show_hide_rh,
@@ -240,8 +241,8 @@ def render_image(image_name='', image_fol='', quality=0, use_square_samples=None
               '--show_connections {}'.format(
                   RenderingMakerPanel.addon.connections_visible())
         print('Running {}'.format(cmd))
-        utils.save_blender_file()
-        utils.run_command_in_new_thread(cmd, queues=False)
+        ns_utils.save_blender_file()
+        ns_utils.run_command_in_new_thread(cmd, queues=False)
 
     print("Finished")
 
@@ -276,7 +277,7 @@ def register():
         bpy.utils.register_class(RenderingMakerPanel)
         bpy.utils.register_class(RenderAllFigures)
 
-        # bpy.utils.register_class(CameraMode)
+        # bpy.ns_utils.register_class(CameraMode)
         bpy.utils.register_class(GrabCamera)
         bpy.utils.register_class(LoadCamera)
         bpy.utils.register_class(MirrorCamera)
@@ -284,13 +285,14 @@ def register():
         # print('Render Panel was registered!')
     except:
         print("Can't register Render Panel!")
+        print(traceback.format_exc())
 
 
 def unregister():
     try:
         bpy.utils.unregister_class(RenderingMakerPanel)
         bpy.utils.unregister_class(RenderAllFigures)
-        # bpy.utils.unregister_class(CameraMode)
+        # bpy.ns_utils.unregister_class(CameraMode)
         bpy.utils.unregister_class(GrabCamera)
         bpy.utils.unregister_class(LoadCamera)
         bpy.utils.unregister_class(MirrorCamera)
