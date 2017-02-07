@@ -1,3 +1,4 @@
+
 import bpy
 import os.path as op
 import numpy as np
@@ -19,7 +20,7 @@ def color_compartments():
             continue
         if name == 'soma':
             print(name, rgb, t, val[t])
-        ns_utils .object_coloring(obj, rgb)
+        ns_utils.object_coloring(obj, rgb)
     print('Finish coloring the comps')
 
 
@@ -45,7 +46,7 @@ class ColoringPanel(bpy.types.Panel):
     bl_space_type = "GRAPH_EDITOR"
     bl_region_type = "UI"
     bl_context = "objectmode"
-    bl_category = "NS"
+    bl_category = "NeuroSurf"
     bl_label = "Coloring"
     addon = None
     init = False

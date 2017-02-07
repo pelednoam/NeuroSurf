@@ -170,6 +170,7 @@ def object_coloring(obj, rgb):
     # todo: do we need to select the object here? In diff mode it's a problem
     # obj.select = True
     cur_mat = obj.active_material
+    cur_mat.diffuse_color = rgb
     diffuse_colors = np.hstack((rgb, [0.]))
     cur_mat.node_tree.nodes['MyColor'].inputs[0].default_value = diffuse_colors
     cur_mat.node_tree.nodes['MyColor1'].inputs[0].default_value = diffuse_colors

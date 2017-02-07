@@ -251,7 +251,7 @@ class RenderingMakerPanel(bpy.types.Panel):
     bl_space_type = "GRAPH_EDITOR"
     bl_region_type = "UI"
     bl_context = "objectmode"
-    bl_category = "Ohad"
+    bl_category = "NeuroSurf"
     bl_label = "Render"
     addon = None
 

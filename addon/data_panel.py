@@ -56,7 +56,7 @@ class DataPanel(bpy.types.Panel):
     bl_space_type = "GRAPH_EDITOR"
     bl_region_type = "UI"
     bl_context = "objectmode"
-    bl_category = "NS"
+    bl_category = "NeuroSurf"
     bl_label = "Data"
     addon = None
     init = False
