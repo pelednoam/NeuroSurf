@@ -14,3 +14,7 @@ KV1 channel governs cerebellar output to thalamus ([Ovsepian et al. 2013](https:
 ## Contributors
 - Noam Peled (npeled@mgh.harvard.edu)
 
+## Suggested Citation
+N. Peled et al. (2019). NeuroSurf: Visualization tool for single neurons. https://github.com/pelednoam/NeuroSurf DOI:10.5281/zenodo.2617346
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2617346.svg)](https://doi.org/10.5281/zenodo.2617346)
